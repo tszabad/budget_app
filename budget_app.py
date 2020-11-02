@@ -37,16 +37,20 @@ class Category:
         return total
     
     def __str__(self):
-        tilte = "*"*(30-len(category.name))/2 + category.name + "*"*(30-len(category.name))/2
+        title_num = len(self.name)
+        padding = int( (30 - title_num) / 2 )
+        title = ("*"*padding )+ self.name + ("*"*padding)
+        lines= ""
+        for i in self.ledger:
+            desc = i["description"][:23]
+            am = float(i["amount"])
+            am = format(am, '.2f')
+            lines += str(desc) + str(am).rjust(30-len(desc)) + "\n"
 
 
+        return title + "\n" + lines + "Total: "+ str(self.get_balance())
 
-        *************Food*************
-        deposit        1000.00
-        groceries               -10.15
-        restaurant and more foo -15.89
-        Transfer to Clothing    -50.00
-        Total: 923.96
+
 
 def create_spend_chart(categories):
   pass
