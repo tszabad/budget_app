@@ -19,12 +19,13 @@ class Category:
             return False
 
     def transfer(self, amount, category):
-        if self.check_funds(amount) == True:
-            self.withdraw(amount,f"Transfer to {category.name}" )
-            category.deposit(amount, f"fTransfer from {self.name}")
-            return False
+        success = self.withdraw(amount,f"Transfer to {category.name}" )
+        if success:
+          category.deposit(amount, f"Transfer from {self.name}")
+          return success
         else:
-            return True
+            return success
+            
         
     def check_funds(self, amount):
         if amount > self.get_balance():
@@ -53,4 +54,44 @@ class Category:
 
 
 def create_spend_chart(categories):
-  pass
+    title = "Percentage spent by category"
+    x= len(categories)
+    y = 100
+    percentages = []
+    total_spent = 0
+    for i in categories: 
+        total_spent += i.get_balance()
+    for i in categories: 
+            percent = i.get_balance() / total_spent
+            percentages.append( int((percent) * 100))
+        
+    output = ""
+    while y >= 0:
+        output += "\n"
+        output +=  str(y) + "| " if y == 100 else " " + str(y) + "| " if y < 100 and y > 0 else "  0| "
+        i = 0
+        while i < x:
+            if percentages[i] >= y:  
+                output += "o  "
+            else: output += " "*3
+            i += 1
+        y -= 10  
+
+    output += "\n" + " "*4 + "-" + "-"*x*3
+
+    
+    max_name_length = 0
+    for i in categories: 
+        if len(i.name) > max_name_length: 
+            max_name_length = len(i.name) 
+        
+    z = 0
+    while z < max_name_length: 
+        output += "\n" + " "*5
+        for i in categories:
+            try: output += i.name[z] + " "*2
+            except: output += " "*3
+
+        z += 1
+
+    return title + output
