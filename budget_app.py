@@ -34,9 +34,15 @@ class Category:
             return True
 
     def get_balance(self):
-        total = self.budget
-        return total
+        return self.budget
+        
+    def check_withdraws(self):
+      total = 0
+      for i in self.ledger:
+        if i['amount'] < 0: total += i['amount']
+      return total
     
+   
     def __str__(self):
         title_num = len(self.name)
         padding = int( (30 - title_num) / 2 )
@@ -60,9 +66,9 @@ def create_spend_chart(categories):
     percentages = []
     total_spent = 0
     for i in categories: 
-        total_spent += i.get_balance()
+        total_spent += i.check_withdraws()
     for i in categories: 
-            percent = i.get_balance() / total_spent
+            percent = i.check_withdraws() / total_spent
             percentages.append( int((percent) * 100))
         
     output = ""
